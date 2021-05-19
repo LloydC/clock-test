@@ -31,17 +31,21 @@ export class Clock {
   }
 
   plus(addedMinutes) {
-    let currentMinutes = Number(this.minutes);
+    let currentMinutes = Number(this.minutes); 
     let newMinutes = currentMinutes + addedMinutes;
 
     if(newMinutes  > 59 ){
-      const newHour = Math.floor(newMinutes / 60 );
-      this.hours = newHour < 10 ? `0${newHour}` : newHour === 24 ? `00` : `${newHour}`; 
-      this.minutes = newMinutes % 60 < 10 ? `0${newMinutes % 60 }` : `${newMinutes % 60}`; 
-      return this.minutes;
+      const hoursToAdd = Math.floor(newMinutes / 60 );
+      const newHourTime = this.hours + hoursToAdd;
+      const newMinutesTime = newMinutes % 60 
+
+      this.hours = newHourTime < 10 ? `0${newHourTime}` : newHourTime === 24 ? `00` : `${newHour}`; 
+      this.minutes = newMinutesTime < 10 ? `0${newMinutesTime }` : `${newMinutesTime}`; 
+      return `${this.hours}:${this.minutes}`;
     }
     else {
-      return this.minutes = newMinutes < 10 ? `0${newMinutes}`:`${newMinutes}`;
+      this.minutes = newMinutes < 10 ? `0${newMinutes}`:`${newMinutes}`;
+      return `${this.hours}:${this.minutes}`;
     }
   }
 
@@ -56,7 +60,7 @@ export class Clock {
       this.hours = newHour < 10 ? `0${newHour}` : newHour === 24 ? `00` : `${newHour}`;
       this.minutes = convertMinutes % 60 < 10 ? `0${convertMinutes % 60}` : `${convertMinutes % 60}`;
 
-      return this.minutes;
+      return `${this.hours}:${this.minutes}`;
     }
     else if(newMinutes < 0  && newMinutes/60 <= -1){
       const newHour = this.hours - Math.floor(subtractedMinutes/60); // need to add ternary operator for use case where I go back before midnight
@@ -65,14 +69,15 @@ export class Clock {
       this.hours = newHour < 10 ? `0${newHour}` : newHour === 24 ? `00` : `${newHour}`;
       this.minutes = convertMinutes % 60 < 10 ? `0${convertMinutes % 60}` : `${convertMinutes % 60}`;
 
-      return this.minutes;
+      return `${this.hours}:${this.minutes}`;
     }
     else {
-      return this.minutes = newMinutes < 10 ? `0${newMinutes}`:`${newMinutes}`;
+      this.minutes = newMinutes < 10 ? `0${newMinutes}`:`${newMinutes}`;
+      return `${this.hours}:${this.minutes}`;
     }
   }
 
-  equals(firstClock, secondClock) {
-    return firstClock.hours === secondClock.hours && firstClock.minutes === secondClock.minutes;
+  equals(comparedClock) {
+    return this.hours === comparedClock.hours && this.minutes === comparedClock.minutes;
   }
 }
