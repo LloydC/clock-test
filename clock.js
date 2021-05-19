@@ -31,16 +31,29 @@ export class Clock {
   }
 
   plus(addedMinutes) {
+    //If time, try to refactor if() and else if() statements
     let currentMinutes = Number(this.minutes); 
     let newMinutes = currentMinutes + addedMinutes;
 
-    if(newMinutes  > 59 ){
-      const hoursToAdd = Math.floor(newMinutes / 60 );
-      const newHourTime = this.hours + hoursToAdd;
-      const newMinutesTime = newMinutes % 60 
+    if(newMinutes > 1440){
+      const daysAdded = Math.floor(newMinutes / 1440); // 1500 ==> 1
+      const hoursToAdd = Math.floor(newMinutes/60) - daysAdded * 24;
+      const newHourTime = Number(this.hours) + hoursToAdd;
+      const newMinutesTime = newMinutes % 60;
 
-      this.hours = newHourTime < 10 ? `0${newHourTime}` : newHourTime === 24 ? `00` : `${newHour}`; 
+      this.hours = newHourTime < 10 ? `0${newHourTime}` : newHourTime === 24 ? `00` : `${newHourTime}`; 
       this.minutes = newMinutesTime < 10 ? `0${newMinutesTime }` : `${newMinutesTime}`; 
+
+      return `${this.hours}:${this.minutes}`;
+    }
+    else if(newMinutes  > 59  && newMinutes < 1440){
+      const hoursToAdd = Math.floor(newMinutes / 60 );
+      const newHourTime = Number(this.hours) + hoursToAdd;
+
+      const newMinutesTime = newMinutes % 60;
+      this.hours = newHourTime < 10 ? `0${newHourTime}` : newHourTime === 24 ? `00` : `${newHourTime}`; 
+      this.minutes = newMinutesTime < 10 ? `0${newMinutesTime }` : `${newMinutesTime}`; 
+
       return `${this.hours}:${this.minutes}`;
     }
     else {
