@@ -36,7 +36,7 @@ export class Clock {
     let newMinutes = currentMinutes + addedMinutes;
 
     if(newMinutes > 1440){
-      const daysAdded = Math.floor(newMinutes / 1440); // 1500 ==> 1
+      const daysAdded = Math.floor(newMinutes / 1440);
       const hoursToAdd = Math.floor(newMinutes/60) - daysAdded * 24;
       const newHourTime = Number(this.hours) + hoursToAdd;
       const newMinutesTime = newMinutes % 60;
@@ -63,11 +63,26 @@ export class Clock {
   }
 
   minus(subtractedMinutes) {
+    const convertHour = Number(this.hours) === 0 ? 24 : Number(this.hours)
     let currentMinutes = Number(this.minutes);
     let newMinutes = currentMinutes - subtractedMinutes;
-    
-    if(newMinutes < 0  && newMinutes/60 >= -1){
-      const newHour = this.hours--; // need to add ternary operator for use case where I go back before midnight
+    console.log('newMinutes', newMinutes);
+    console.log('newMinutes/60', newMinutes/60)
+
+    if(subtractedMinutes > 1440){
+      const daysToRemove = Math.floor(subtractedMinutes / 1440);
+      const hoursToRemove = Math.floor(subtractedMinutes/60) - daysToRemove * 24;
+      const newHourTime = convertHour - hoursToRemove;
+      const subMin = newMinutes % 60;
+      const newMinutesTime = subMin + 60;
+
+      this.hours = newHourTime < 10 ? `0${newHourTime}` : newHourTime === 24 ? `00` : `${newHourTime}`;
+      this.minutes = newMinutesTime % 60 < 10 ? `0${newMinutesTime % 60}` : `${newMinutesTime % 60}`;
+
+      return `${this.hours}:${this.minutes}`;
+    }
+    else if(newMinutes < 0  && newMinutes/60 >= -1){
+      const newHour = convertHour - 1; // need to add ternary operator for use case where I go back before midnight
       const convertMinutes = 60 + newMinutes
 
       this.hours = newHour < 10 ? `0${newHour}` : newHour === 24 ? `00` : `${newHour}`;
@@ -76,8 +91,15 @@ export class Clock {
       return `${this.hours}:${this.minutes}`;
     }
     else if(newMinutes < 0  && newMinutes/60 <= -1){
-      const newHour = this.hours - Math.floor(subtractedMinutes/60); // need to add ternary operator for use case where I go back before midnight
-      const convertMinutes = 60 - currentMinutes - (subtractedMinutes % 60)
+      console.log('this.hours', this.hours);
+      console.log(Math.ceil(subtractedMinutes/60))
+      const newHour = convertHour - Math.ceil(subtractedMinutes/60); // need to add ternary operator for use case where I go back before midnight
+      console.log('newHour', newHour)
+      const subMin = subtractedMinutes % 60;
+      const convertMinutes = currentMinutes - subMin + 60;
+      console.log('currentMinutes', currentMinutes)
+      console.log('sub Min', subMin)
+      console.log('convertMinutes', convertMinutes)
 
       this.hours = newHour < 10 ? `0${newHour}` : newHour === 24 ? `00` : `${newHour}`;
       this.minutes = convertMinutes % 60 < 10 ? `0${convertMinutes % 60}` : `${convertMinutes % 60}`;
