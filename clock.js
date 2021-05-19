@@ -82,7 +82,7 @@ export class Clock {
       return `${this.hours}:${this.minutes}`;
     }
     else if(newMinutes < 0  && newMinutes/60 >= -1){
-      const newHour = convertHour - 1; // need to add ternary operator for use case where I go back before midnight
+      const newHour = convertHour - 1;
       const convertMinutes = 60 + newMinutes
 
       this.hours = newHour < 10 ? `0${newHour}` : newHour === 24 ? `00` : `${newHour}`;
@@ -93,7 +93,7 @@ export class Clock {
     else if(newMinutes < 0  && newMinutes/60 <= -1){
       console.log('this.hours', this.hours);
       console.log(Math.ceil(subtractedMinutes/60))
-      const newHour = convertHour - Math.ceil(subtractedMinutes/60); // need to add ternary operator for use case where I go back before midnight
+      const newHour = convertHour - Math.ceil(subtractedMinutes/60);
       console.log('newHour', newHour)
       const subMin = subtractedMinutes % 60;
       const convertMinutes = currentMinutes - subMin + 60;
@@ -113,6 +113,31 @@ export class Clock {
   }
 
   equals(comparedClock) {
-    return this.hours === comparedClock.hours && this.minutes === comparedClock.minutes;
+    console.log(comparedClock)
+    if(comparedClock.hours.includes('0-')){
+      const hourFormat = Number(comparedClock.hours.replace('0-',''));
+      const checkFormat = hourFormat > 24 ? (hourFormat - 24) : hourFormat
+      const convertHour = 24 - checkFormat;
+      // console.log('convertHour', convertHour)
+      // console.log('this.hours', this.hours);
+      // console.log(this.hours === convertHour)
+      // console.log(this.minutes === comparedClock.minutes)
+      return Number(this.hours) === convertHour && this.minutes === comparedClock.minutes;
+    }
+    // else if(comparedClock.minutes.includes('0-')){
+      
+    //   const minFormat = Number(comparedClock.minutes.replace('0-',''));
+    //   const checkFormat = minFormat > 60 ? (minFormat%60) : minFormat;
+    //   const convertMinutes = 60 - checkFormat;
+
+    //   console.log('convertMinutes', convertMinutes)
+    //   console.log('this.hours', this.hours)
+    //   console.log(actualHour)
+    //   console.log(Number(this.minutes) === convertMinutes)
+    //   return this.hours === actualHour && Number(this.minutes) === convertMinutes;
+    // }
+    else{
+      return this.hours === comparedClock.hours && this.minutes === comparedClock.minutes;
+    }
   }
 }
